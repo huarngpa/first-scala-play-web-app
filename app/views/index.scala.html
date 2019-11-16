@@ -1,0 +1,18 @@
+@(dateStr: String, sunInfo: model.SunInfo, temperature: Double, requests: Int)
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <title>Home</title>
+        <link rel="shortcut icon" type="image/png"
+           href="@routes.Application.versioned("images/favicon.png")">
+    </head>
+    <body>
+        <h1>Hello Play</h1>
+        <div>Date: @dateStr</div>
+        <div>Sunrise time: @{sunInfo.sunrise}</div>
+        <div>Sunset time: @{sunInfo.sunset}</div>
+        <div>Temperature: @temperature</div>
+        <div>Some random value: @{Math.random}</div>
+        <div>Requests: @requests</div>
+    </body>
+</html>

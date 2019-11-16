@@ -1,0 +1,17 @@
+{
+  "name": "scala-web-project",
+  "version": "1.0.0",
+  "description": "Front-end",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "react": "^16.12.0"
+  },
+  "devDependencies": {
+    "webpack": "^4.41.2"
+  }
+}
