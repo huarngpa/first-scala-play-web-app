@@ -12,7 +12,7 @@ import services.SunService
 
 import scala.concurrent.Future
 
-class ApplicationSpec extends PlaySpec with MockitoSugar {
+class ApplicationSpec extends PlaySpec with MockitoSugar with ScalaFutures {
   "DateTimeFormat" must {
     "return 1970 as the beginning of epoch" in {
       val beginning = ZonedDateTime.ofInstant(Instant.ofEpochSecond(0), ZoneId.systemDefault())
@@ -56,7 +56,7 @@ class ApplicationSpec extends PlaySpec with MockitoSugar {
       val sunService = new SunService(wsClientStub)
       val resultF = sunService.getSunInfo(lat, lon)
 
-      ScalaFutures.whenReady(resultF) { res =>
+      whenReady(resultF) { res =>
         res.sunrise mustBe "22:11:41"
         res.sunset mustBe "09:05:39"
       }
