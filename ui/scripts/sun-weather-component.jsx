@@ -27,7 +27,7 @@ class SunWeatherComponent extends React.Component {
   };
 
   render = () => {
-    return <table>
+    return <table className="table is-bordered is-striped is-narrow is-hoverable is-fullwidth">
       <tbody>
       <tr>
         <td>Date</td>

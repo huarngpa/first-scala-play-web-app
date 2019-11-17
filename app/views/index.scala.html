@@ -2,13 +2,23 @@
 <!DOCTYPE html>
 <html lang="en">
     <head>
-        <title>Home</title>
+        <title>My Scala Web App</title>
+        <link rel="stylesheet"
+            href="@routes.Application.versioned("compiled/styles.css")">
         <link rel="shortcut icon" type="image/png"
            href="@routes.Application.versioned("images/favicon.png")">
     </head>
     <body>
-        <h1>Hello Play</h1>
-        <div id="reactView"></div>
+        <secton class="section">
+            <div class="container">
+                <div class="columns">
+                    <div class="column is-half">
+                        <h1 class="title">Hello Play</h1>
+                        <div id="reactView"></div>
+                    </div>
+                </div>
+            </div>
+        </secton>
     </body>
     <script src="@routes.Application.versioned("compiled/bundle.js")"></script>
 </html>
