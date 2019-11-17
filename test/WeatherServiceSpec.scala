@@ -6,7 +6,7 @@ import org.scalatestplus.play.components.OneAppPerSuiteWithComponents
 import play.api.ApplicationLoader.Context
 import play.api.libs.ws.ahc.AhcWSComponents
 import play.api.routing.Router
-import play.api.{BuiltInComponents, BuiltInComponentsFromContext, NoHttpFiltersComponents}
+import play.api.{BuiltInComponentsFromContext, NoHttpFiltersComponents}
 import services.WeatherService
 
 class TestAppComponents(context: Context) extends BuiltInComponentsFromContext(context)
