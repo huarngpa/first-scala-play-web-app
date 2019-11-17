@@ -7,4 +7,5 @@ target
 /.project
 /.settings
 /node_modules
+/public/compiled
 /RUNNING_PID

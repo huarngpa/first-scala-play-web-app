@@ -6,21 +6,26 @@ import java.util.concurrent.TimeUnit
 
 import actors.StatsActor
 import akka.actor.ActorSystem
-import akka.util.Timeout
 import akka.pattern.ask
+import akka.util.Timeout
 import controllers.Assets.Asset
-import play.api.libs.ws.WSClient
+import model.CombinedData
+import play.api.libs.json.Json
 import play.api.mvc._
 import services.{SunService, WeatherService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class Application(components: ControllerComponents, assets: Assets, ws: WSClient,
+class Application(components: ControllerComponents, assets: Assets,
                   sunService: SunService, weatherService: WeatherService,
                   actorSystem: ActorSystem)
     extends AbstractController(components) {
 
-  def index = Action.async {
+  def index = Action {
+    Ok(views.html.index())
+  }
+
+  def data = Action.async {
     val date = new Date
     val dateStr = new SimpleDateFormat().format(date)
 
@@ -37,7 +42,7 @@ class Application(components: ControllerComponents, assets: Assets, ws: WSClient
       sunInfo <- sunInfoF
       temperature <- temperatureF
       requests <- requestsF
-    } yield  Ok(views.html.index(dateStr, sunInfo, temperature, requests))
+    } yield Ok(Json.toJson(CombinedData(dateStr, sunInfo, temperature, requests)))
   }
 
   def versioned(path: String, file: Asset) = assets.versioned(path, file)
