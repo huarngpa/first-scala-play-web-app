@@ -7,5 +7,6 @@ target
 /.project
 /.settings
 /node_modules
+postgresql-42.2.9.jar
 /public/compiled
 /RUNNING_PID

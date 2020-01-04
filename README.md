@@ -2,6 +2,16 @@
 
 Following [Denis Kalinin's book](https://leanpub.com/modern-web-development-with-scala). We use the following technologies: Scala, Play, Akka, Javascript, and React to explore web development using Scala technologies.
 
+# Setup
+
+Run scripts and liquibase to setup and migrate your database:
+
+```
+./scripts/setup-local-database/setup-local-database.sh
+cd scripts/liquibase
+liquibase update
+```
+
 # Deployment
 
 For `development` you simply need to do:
