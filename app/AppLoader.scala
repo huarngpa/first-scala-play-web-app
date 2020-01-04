@@ -1,17 +1,17 @@
 import actors.StatsActor
 import actors.StatsActor.Ping
-import akka.actor.Props
-import controllers.Application
-import controllers.AssetsComponents
-import play.filters.HttpFiltersComponents
+import akka.actor.{ActorRef, Props}
+import com.softwaremill.macwire._
+import controllers.{Application, AssetsComponents}
+import filters.StatsFilter
 import play.api.ApplicationLoader.Context
 import play.api._
+import play.api.db.slick.{DefaultSlickApi, SlickApi, SlickComponents}
 import play.api.libs.ws.ahc.AhcWSComponents
 import play.api.mvc._
-import router.Routes
 import play.api.routing.Router
-import com.softwaremill.macwire._
-import filters.StatsFilter
+import play.filters.HttpFiltersComponents
+import router.Routes
 import services.{SunService, WeatherService}
 
 import scala.concurrent.Future
@@ -28,25 +28,29 @@ class AppApplicationLoader extends ApplicationLoader {
 class AppComponents(context: Context) extends BuiltInComponentsFromContext(context)
   with AhcWSComponents
   with AssetsComponents
-  with HttpFiltersComponents {
+  with HttpFiltersComponents
+  with SlickComponents {
 
   private val log = Logger(this.getClass)
 
-  lazy val statsActor = actorSystem.actorOf(Props(wire[StatsActor]), StatsActor.name)
-  override lazy val controllerComponents = wire[DefaultControllerComponents]
+  lazy val statsActor: ActorRef = actorSystem.actorOf(Props(wire[StatsActor]), StatsActor.name)
+  override lazy val controllerComponents: ControllerComponents = wire[DefaultControllerComponents]
   lazy val prefix: String = "/"
   lazy val router: Router = wire[Routes]
-  lazy val applicationController = wire[Application]
+  lazy val applicationController: Application = wire[Application]
 
-  lazy val sunService = wire[SunService]
-  lazy val weatherService = wire[WeatherService]
+  override lazy val slickApi: SlickApi =
+    new DefaultSlickApi(environment, configuration, applicationLifecycle)(executionContext)
+
+  lazy val sunService: SunService = wire[SunService]
+  lazy val weatherService: WeatherService = wire[WeatherService]
 
   applicationLifecycle.addStopHook { () =>
     log.info("The app is about to stop")
     Future.successful(Unit)
   }
 
-  val onStart = {
+  val onStart: Unit = {
     log.info("The app is about to start")
     statsActor ! Ping
   }

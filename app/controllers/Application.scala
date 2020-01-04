@@ -16,16 +16,18 @@ import services.{SunService, WeatherService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
-class Application(components: ControllerComponents, assets: Assets,
-                  sunService: SunService, weatherService: WeatherService,
+class Application(components: ControllerComponents,
+                  assets: Assets,
+                  sunService: SunService,
+                  weatherService: WeatherService,
                   actorSystem: ActorSystem)
     extends AbstractController(components) {
 
-  def index = Action {
+  def index: Action[AnyContent] = Action {
     Ok(views.html.index())
   }
 
-  def data = Action.async {
+  def data: Action[AnyContent] = Action.async {
     val date = new Date
     val dateStr = new SimpleDateFormat().format(date)
 
@@ -45,5 +47,5 @@ class Application(components: ControllerComponents, assets: Assets,
     } yield Ok(Json.toJson(CombinedData(dateStr, sunInfo, temperature, requests)))
   }
 
-  def versioned(path: String, file: Asset) = assets.versioned(path, file)
+  def versioned(path: String, file: Asset): Action[AnyContent] = assets.versioned(path, file)
 }
