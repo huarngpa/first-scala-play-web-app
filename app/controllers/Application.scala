@@ -47,5 +47,13 @@ class Application(components: ControllerComponents,
     } yield Ok(Json.toJson(CombinedData(dateStr, sunInfo, temperature, requests)))
   }
 
+  def users: Action[AnyContent] = Action {
+    Ok(Json.toJson("hello"))
+  }
+
+  def login: Action[AnyContent] = Action {
+    Ok(views.html.login())
+  }
+
   def versioned(path: String, file: Asset): Action[AnyContent] = assets.versioned(path, file)
 }
