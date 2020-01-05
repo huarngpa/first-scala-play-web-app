@@ -5,6 +5,7 @@ import com.softwaremill.macwire._
 import controllers.{Application, AssetsComponents}
 import filters.StatsFilter
 import helpers.ActionRunner
+import play.api
 import play.api.ApplicationLoader.Context
 import play.api._
 import play.api.db.slick.{DatabaseConfigProvider, DbName, DefaultSlickApi, SlickApi, SlickComponents}
@@ -20,7 +21,7 @@ import slick.basic.BasicProfile
 import scala.concurrent.Future
 
 class AppApplicationLoader extends ApplicationLoader {
-  def load(context: Context) = {
+  def load(context: Context): api.Application = {
     LoggerConfigurator(context.environment.classLoader).foreach { configurator =>
       configurator.configure(context.environment)
     }

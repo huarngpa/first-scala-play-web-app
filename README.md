@@ -2,6 +2,11 @@
 
 Following [Denis Kalinin's book](https://leanpub.com/modern-web-development-with-scala). We use the following technologies: Scala, Play, Akka, Javascript, and React to explore web development using Scala technologies.
 
+We take a couple of different technology departures from the original project:
++ Upgrades: Play, Scala, sbt, etc.
++ Slick instead of scalikejdbc
++ Liquibase approach to managing database migrations
+
 # Setup
 
 Run scripts and liquibase to setup and migrate your database:
