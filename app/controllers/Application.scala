@@ -9,14 +9,18 @@ import akka.actor.ActorSystem
 import akka.pattern.ask
 import akka.util.Timeout
 import controllers.Assets.Asset
+import helpers.ActionRunner
 import model.CombinedData
 import play.api.libs.json.Json
 import play.api.mvc._
+import repositories.UserRepository
 import services.{SunService, WeatherService}
 
 import scala.concurrent.ExecutionContext.Implicits.global
 
 class Application(components: ControllerComponents,
+                  actionRunner: ActionRunner,
+                  userRepository: UserRepository,
                   assets: Assets,
                   sunService: SunService,
                   weatherService: WeatherService,
@@ -47,8 +51,11 @@ class Application(components: ControllerComponents,
     } yield Ok(Json.toJson(CombinedData(dateStr, sunInfo, temperature, requests)))
   }
 
-  def users: Action[AnyContent] = Action {
-    Ok(Json.toJson("hello"))
+  def users: Action[AnyContent] = Action.async {
+    import actionRunner.driver.api._
+    for {
+      users <- actionRunner.run(userRepository.records.result)
+    } yield Ok(Json.toJson(users))
   }
 
   def login: Action[AnyContent] = Action {

@@ -4,15 +4,18 @@ import akka.actor.{ActorRef, Props}
 import com.softwaremill.macwire._
 import controllers.{Application, AssetsComponents}
 import filters.StatsFilter
+import helpers.ActionRunner
 import play.api.ApplicationLoader.Context
 import play.api._
-import play.api.db.slick.{DefaultSlickApi, SlickApi, SlickComponents}
+import play.api.db.slick.{DatabaseConfigProvider, DbName, DefaultSlickApi, SlickApi, SlickComponents}
 import play.api.libs.ws.ahc.AhcWSComponents
 import play.api.mvc._
 import play.api.routing.Router
 import play.filters.HttpFiltersComponents
+import repositories.UserRepository
 import router.Routes
 import services.{SunService, WeatherService}
+import slick.basic.BasicProfile
 
 import scala.concurrent.Future
 
@@ -37,17 +40,23 @@ class AppComponents(context: Context) extends BuiltInComponentsFromContext(conte
   override lazy val controllerComponents: ControllerComponents = wire[DefaultControllerComponents]
   lazy val prefix: String = "/"
   lazy val router: Router = wire[Routes]
+  lazy val actionRunner: ActionRunner = wire[ActionRunner]
+  lazy val userRepository: UserRepository = wire[UserRepository]
   lazy val applicationController: Application = wire[Application]
 
   override lazy val slickApi: SlickApi =
     new DefaultSlickApi(environment, configuration, applicationLifecycle)(executionContext)
+
+  lazy val databaseConfigProvider: DatabaseConfigProvider = new DatabaseConfigProvider {
+    override def get[P <: BasicProfile] = slickApi.dbConfig(DbName("default"))
+  }
 
   lazy val sunService: SunService = wire[SunService]
   lazy val weatherService: WeatherService = wire[WeatherService]
 
   applicationLifecycle.addStopHook { () =>
     log.info("The app is about to stop")
-    Future.successful(Unit)
+    Future.successful(())
   }
 
   val onStart: Unit = {

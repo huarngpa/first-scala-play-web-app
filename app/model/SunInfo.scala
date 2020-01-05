@@ -1,9 +1,9 @@
 package model
 
-import play.api.libs.json.Json
+import play.api.libs.json.{Format, Json}
 
 case class SunInfo(sunrise: String, sunset: String)
 
 object SunInfo {
-  implicit val writes = Json.writes[SunInfo]
+  implicit val format: Format[SunInfo] = Json.format[SunInfo]
 }
