@@ -6,8 +6,8 @@ import java.time.format.DateTimeFormatter
 import model.SunInfo
 import play.api.libs.ws.WSClient
 
-import scala.concurrent.Future
 import scala.concurrent.ExecutionContext.Implicits.global
+import scala.concurrent.Future
 
 class SunService(wsClient: WSClient) {
   def getSunInfo(lat: Double, lon: Double): Future[SunInfo] = {

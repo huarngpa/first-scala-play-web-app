@@ -41,7 +41,7 @@ class Application(components: ControllerComponents,
     val sunInfoF = sunService.getSunInfo(lat, lon)
     val temperatureF = weatherService.getTemperature(lat, lon)
 
-    implicit val timeout = Timeout(5, TimeUnit.SECONDS)
+    implicit val timeout: Timeout = Timeout(5, TimeUnit.SECONDS)
     val requestsF = (actorSystem.actorSelection(StatsActor.path) ? StatsActor.GetStats).mapTo[Int]
 
     for {
@@ -52,9 +52,8 @@ class Application(components: ControllerComponents,
   }
 
   def users: Action[AnyContent] = Action.async {
-    import actionRunner.driver.api._
     for {
-      users <- actionRunner.run(userRepository.records.result)
+      users <- userRepository.getAllUsers
     } yield Ok(Json.toJson(users))
   }
 

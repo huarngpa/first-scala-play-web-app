@@ -8,6 +8,7 @@ import helpers.ActionRunner
 import play.api
 import play.api.ApplicationLoader.Context
 import play.api._
+import play.api.cache.caffeine.CaffeineCacheComponents
 import play.api.db.slick.{DatabaseConfigProvider, DbName, DefaultSlickApi, SlickApi, SlickComponents}
 import play.api.libs.ws.ahc.AhcWSComponents
 import play.api.mvc._
@@ -15,7 +16,7 @@ import play.api.routing.Router
 import play.filters.HttpFiltersComponents
 import repositories.UserRepository
 import router.Routes
-import services.{SunService, WeatherService}
+import services.{AuthService, SunService, WeatherService}
 import slick.basic.BasicProfile
 
 import scala.concurrent.Future
@@ -33,7 +34,8 @@ class AppComponents(context: Context) extends BuiltInComponentsFromContext(conte
   with AhcWSComponents
   with AssetsComponents
   with HttpFiltersComponents
-  with SlickComponents {
+  with SlickComponents
+  with CaffeineCacheComponents {
 
   private val log = Logger(this.getClass)
 
@@ -52,6 +54,7 @@ class AppComponents(context: Context) extends BuiltInComponentsFromContext(conte
     override def get[P <: BasicProfile] = slickApi.dbConfig(DbName("default"))
   }
 
+  lazy val authService: AuthService = new AuthService(defaultCacheApi.sync, userRepository)
   lazy val sunService: SunService = wire[SunService]
   lazy val weatherService: WeatherService = wire[WeatherService]
 
